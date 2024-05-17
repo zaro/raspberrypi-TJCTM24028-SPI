@@ -1,0 +1,4 @@
+adafruit-circuitpython-rgb-display
+pillow
+xpt2046-circuitpython
+
