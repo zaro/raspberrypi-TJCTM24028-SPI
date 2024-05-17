@@ -42,22 +42,37 @@ touch = xpt2046_circuitpython.Touch(
     force_baudrate = 100000
 )
 
+w = display.width
+h = display.height
+s = 4
+s2 = 2
+
 try:
     # Clear the screen
     display.fill(color565(0, 0, 0))
-        
+    display.fill_rectangle(0, 0, 20, 20, color565(255, 0, 0))
+    display.fill_rectangle(w-20, 0, 20, 20, color565(0, 255, 0))
+    display.fill_rectangle(0, h-20, 20, 20, color565(0, 0, 255))
+    display.fill_rectangle(w-20, h-20, 20, 20, color565(255, 255, 255))
+    time.sleep(0.1) 
+    
     while True:
         # Check if we have an interrupt signal
         if touch.is_pressed():
             # Get the coordinates for this touch.
-            x, y = touch.get_coordinates()
-            # The Y reading is flipped to what the Adafruit library expects.
-            y = touch.height - y
+            try:
+                x, y = touch.get_coordinates()
+                # The Y reading is flipped to what the Adafruit library expects.
+                # y = touch.height - y
+                x = touch.width - x 
+                print(x,y)
 
-            display.fill_rectangle(max(0, x - 10), max(0, y - 10), 20, 20, color565(255, 255, 255))
-
-        # Delay for a bit
-        time.sleep(0.1)
+                display.fill_rectangle(max(0, x - s2), max(0, y - s2), s, s, color565(255, 255, 255))
+            except xpt2046_circuitpython.exceptions.ReadFailedException:
+                pass
+        else:
+            # Delay for a bit
+            time.sleep(0.1)
 
 except KeyboardInterrupt:
     led.value = False
